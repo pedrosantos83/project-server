@@ -12,6 +12,16 @@ router.get("/destiny", async (req, res) => {
     res.status(500).json(`error occurred ${e}`);
   }
 });
+router.get("/allcities", async (req, res) => {
+  const allCities = await Destiny.find({}, {city: 1, _id: 0})
+  const allPlaces = await Destiny.find({}, {places: 1, _id: 0})
+
+  try {
+    res.status(200).json(allCities);
+  } catch (e) {
+    res.status(500).json(`error occurred ${e}`);
+  }
+});
 
 //Create destiny
 router.post("/destiny", async (req, res) => {
@@ -89,4 +99,14 @@ try{
   res.status(500).json(`error occurred ${e}`)
 }
 });
+//SEARCH
+router.post("/search", async (req, res) => {
+  try {
+    const destiny = await Destiny.findById(req.params.id);
+    res.status(200).json(destiny);
+  } catch (e) {
+    res.status(500).json(`error occurred ${e}`);
+  }
+});
+
 module.exports = router;
