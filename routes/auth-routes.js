@@ -3,10 +3,11 @@ const router = express.Router();
 const User = require("../models/user-model")
 const bcrypt = require ("bcryptjs");
 const passport = require ("passport");
+const fileUpload = require ("../configs/cloudinary")
 
 //SignUP
 router.post("/signup", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, country, imageUrl } = req.body;
   //Checking for username and password being filled out
   if (username === "" || password === "") {
     res.status(500).json("Indicate username and password");
@@ -39,6 +40,8 @@ router.post("/signup", async (req, res) => {
    user = await User.create({
       username,
       email,
+      country,
+      imageUrl,
       password: hashedPassword,
     });
     res.json(user)
@@ -46,6 +49,14 @@ router.post("/signup", async (req, res) => {
     res.status(500).json(`error occurred ${e}`);
     return;
   }
+  //???
+  router.post('/upload', fileUpload.single('file'), (req,res) =>{
+    try{
+      res.status(200).json({fileUrl: req.file.path});
+    }catch(e){
+      res.status(500).json(`error occurred ${e}`)
+    }
+    });
 });
 
 //LOgin
