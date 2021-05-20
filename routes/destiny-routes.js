@@ -25,11 +25,14 @@ router.get("/allcities", async (req, res) => {
 
 //Create destiny
 router.post("/destiny", async (req, res) => {
+  console.log("user", req.user)
   const {  date, city, description, duration, places, imageUrl } = req.body;
   if (!date || !city|| !description || !duration || !places|| !imageUrl) {
     res.status(400).json("missing fields");
     return;
   }
+
+  console.log("user", req.user)
 
   try {
     const response = await Destiny.create({
