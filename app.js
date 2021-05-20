@@ -42,9 +42,9 @@ app.use(session({
   saveUninitialized: true,
   resave: false,
   cookie:{
-    samsite:'none',// true, // the client is on the same domain as the server
-    secure:true, // false, //not using https
-    httpOnly: false, //true, //not using https (only http)
+    samsite:'none',//true  // the client is on the same domain as the server
+    secure:true, //false,  //not using https
+    httpOnly:false, // true, //not using https (only http)
     maxAge: 6000000 //experation time in milliseconds
   },
   rolling:true //session gets refreshed with interactions
