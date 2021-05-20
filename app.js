@@ -42,7 +42,7 @@ app.use(session({
   saveUninitialized: true,
   resave: false,
   cookie:{
-    samesite:'none',//true  // the client is on the same domain as the server
+    sameSite:'none',//true  // the client is on the same domain as the server
     secure:true, //false,  //not using https
     httpOnly:false, // true, //not using https (only http)
     maxAge: 6000000 //experation time in milliseconds
