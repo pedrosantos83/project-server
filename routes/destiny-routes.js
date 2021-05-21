@@ -13,11 +13,31 @@ router.get("/destiny", async (req, res) => {
   }
 });
 router.get("/allcities", async (req, res) => {
-  const allCities = await Destiny.find({}, {city: 1, _id: 0})
-  const allPlaces = await Destiny.find({}, {places: 1, _id: 0})
-
   try {
-    res.status(200).json(allCities);
+  const allDestinations = []
+  const allCities = await Destiny.find({}, {city: 1, _id: 0})
+  citiesArr = allCities.map(city => city.city)
+  citiesArr.forEach(city => allDestinations.push(city))
+  
+  const allPlaces = await Destiny.find({}, {places: 1, _id: 0})
+  const arr = allPlaces.map(place => place.places)
+  arr.forEach(array => {
+    array.forEach(place => allDestinations.push(place))
+  })
+
+    res.status(200).json(allDestinations);
+  } catch (e) {
+    res.status(500).json(`error occurred ${e}`);
+  }
+});
+
+
+router.get("/places/:place", async (req, res) => {
+const place = req.params.place
+  try {
+    const cities = await Destiny.find({city: place})
+    console.log(cities)
+    res.status(200).json(cities);
   } catch (e) {
     res.status(500).json(`error occurred ${e}`);
   }
@@ -27,6 +47,8 @@ router.get("/allcities", async (req, res) => {
 router.post("/destiny", async (req, res) => {
   console.log("user", req.user)
   const {  date, city, description, duration, places, imageUrl } = req.body;
+  const placesArr = places.split(', ')
+
   if (!date || !city|| !description || !duration || !places|| !imageUrl) {
     res.status(400).json("missing fields");
     return;
@@ -41,7 +63,7 @@ router.post("/destiny", async (req, res) => {
       city,
       description,
       duration,
-      places,
+      places: placesArr,
       imageUrl,
       
     });
@@ -80,13 +102,14 @@ router.get("/destiny/:id", async (req, res) => {
 router.put("/destiny/:id", async (req, res) => {
   try {
     const { user, date, city, description, duration, places } = req.body;
+    const placesArr = places.split(', ')
     Destiny.findByIdAndUpdate(req.params.id, {
       user,
       date,
       city,
       description,
       duration,
-      places,
+      places: placesArr
     });
     res.status(200).json(`destiny with id ${req.params.id} updated.`)
   } catch (e) {
